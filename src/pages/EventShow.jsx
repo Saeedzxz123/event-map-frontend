@@ -66,10 +66,12 @@ useEffect(() => {
   const handleComment = async () => {
     if (!token || !newComment) return
     try {
-      await axios.post(
-        `${API_URL}/comments/${id}`,
-        { text: newComment },
-        { headers: { Authorization: token } }
+     await axios.post(
+  `${API_URL}/likes/${id}`,
+  {},
+  { headers: { Authorization: `Bearer ${token}` } }
+)
+
       )
       setNewComment('')
       fetchData()
@@ -115,9 +117,9 @@ useEffect(() => {
       <p>{event.eventInformation}</p>
       {event.picture && (
         <img
-          src={event.picture}
-          alt={event.eventName}
-          style={{ maxWidth: '300px', margin: '1rem 0' }}
+        src={event.picture}
+        alt={event.eventName}
+        style={{ maxWidth: '300px', margin: '1rem 0' }}
         />
       )}
 
@@ -128,8 +130,8 @@ useEffect(() => {
 
       {isOwnerOrAdmin && (
         <button
-          onClick={deleteEvent}
-          style={{ marginLeft: '1rem', background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}
+        onClick={deleteEvent}
+        style={{ marginLeft: '1rem', background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}
         >
           Delete Event
         </button>
@@ -138,20 +140,20 @@ useEffect(() => {
       <h3 style={{ marginTop: '2rem' }}>Comments</h3>
       {comments.map(c => (
         <div
-          key={c._id}
-          style={{
+        key={c._id}
+        style={{
             borderBottom: '1px solid #ccc',
             marginBottom: '0.5rem',
             paddingBottom: '0.5rem'
-          }}
+        }}
         >
-          <p>
+        <p>
             <strong>{c.user.username}:</strong> {c.text}
-          </p>
-          {(user && (user.isAdmin || user._id === c.user._id)) && (
+        </p>
+        {(user && (user.isAdmin || user._id === c.user._id)) && (
             <button
-              onClick={() => deleteComment(c._id)}
-              style={{
+            onClick={() => deleteComment(c._id)}
+            style={{
                 background: '#ef4444',
                 color: '#fff',
                 border: 'none',
@@ -169,22 +171,22 @@ useEffect(() => {
       {token && (
         <div style={{ marginTop: '1rem' }}>
           <input
-            type="text"
-            value={newComment}
-            onChange={e => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-            style={{ padding: '0.5rem', width: '60%', marginRight: '0.5rem' }}
-          />
-          <button
-            onClick={handleComment}
-            style={{
-              background: '#3b82f6',
-              color: '#fff',
-              border: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: '6px',
-              cursor: 'pointer'
-            }}
+        type="text"
+        value={newComment}
+        onChange={e => setNewComment(e.target.value)}
+        placeholder="Write a comment..."
+        style={{ padding: '0.5rem', width: '60%', marginRight: '0.5rem' }}
+        />
+        <button
+        onClick={handleComment}
+        style={{
+        background: '#3b82f6',
+        color: '#fff',
+        border: 'none',
+        padding: '0.5rem 1rem',
+        borderRadius: '6px',
+        cursor: 'pointer'
+    }}
           >
             Post Comment
           </button>
