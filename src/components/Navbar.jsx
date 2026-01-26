@@ -12,24 +12,63 @@ const Navbar = () => {
   }
 
   const navButtonStyle = {
-    background: '#6d28d9',
-    color: '#fff',
+    background: '#3b82f6',
+    color: '#ffffff',
     border: 'none',
-    padding: '0.5rem 1rem',
-    borderRadius: '6px',
-    cursor: 'pointer'
+    padding: '0.4rem 1rem',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: '500',
   }
 
   return (
     <nav
       style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '1rem'
+        padding: '0.75rem 1rem',
+        background: '#1e3a8a',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+        zIndex: 1000
       }}
     >
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <div>
+        {user && (
+          <button
+            onClick={goToProfile}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#ffffff'
+            }}
+          >
+            <img
+              src={user.profilePhoto || defaultAvatar}
+              alt="profile"
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                objectFit: 'cover'
+              }}
+            />
+            <span style={{ fontWeight: '600' }}>
+              {user.username}
+            </span>
+          </button>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.75rem' }}>
         <Link to="/">
           <button style={navButtonStyle}>Home</button>
         </Link>
@@ -38,50 +77,22 @@ const Navbar = () => {
           <button style={navButtonStyle}>Events</button>
         </Link>
 
-
-
-        <button style={navButtonStyle} onClick={logout}>Logout</button>
-
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         {user ? (
-          <>
-            <button
-              onClick={goToProfile}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              <img
-            src={user.profilePhoto || defaultAvatar}
-            alt="profile"
-            style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            objectFit: 'cover'
-                }}
-              />  <span>{user.username}</span></button>
-
-          </>
+          <button style={navButtonStyle} onClick={logout}>
+            Logout
+          </button>
         ) : (
           <>
-        <Link to="/login">
-        <button style={navButtonStyle}>Login</button>
-        </Link>
-
-        <Link to="/register">
-        <button style={navButtonStyle}>Register</button>
+            <Link to="/login">
+              <button style={navButtonStyle}>Login</button>
             </Link>
-        </>
+
+            <Link to="/register">
+              <button style={navButtonStyle}>Register</button>
+            </Link>
+          </>
         )}
-    </div>
+      </div>
     </nav>
   )
 }
