@@ -73,9 +73,17 @@ const Navbar = () => {
           <button style={navButtonStyle}>Home</button>
         </Link>
 
-        <Link to="/events">
-          <button style={navButtonStyle}>Events</button>
-        </Link>
+     <Link to="/events">
+  <button style={navButtonStyle}>Events</button>
+     </Link>
+
+{user && (
+  <Link to="/events/new">
+    <button style={navButtonStyle}>Add Event</button>
+  </Link>
+)}
+
+
 
         {user ? (
           <button style={navButtonStyle} onClick={logout}>

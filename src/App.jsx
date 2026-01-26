@@ -9,6 +9,7 @@ import Register from './pages/Register'
 import OTP from './pages/OTP'
 import Events from './pages/Events'
 import EventShow from './pages/EventShow'
+import AddEvent from './pages/AddEvent'
 
 const App = () => (
   <AuthProvider>
@@ -20,6 +21,8 @@ const App = () => (
         <Route path="/register" element={<Register />} />
         <Route path="/otp" element={<OTP />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/events/new" element={
+        <ProtectedRoute> <AddEvent /></ProtectedRoute>} />
         <Route path="/events/:id" element={<EventShow />} />
       </Routes>
     </Router>

@@ -148,7 +148,7 @@ useEffect(() => {
         }}
         >
         <p>
-            <strong>{c.user.username}:</strong> {c.text}
+            <strong>{c.userid.username}:</strong> {c.text}
         </p>
         {(user && (user.isAdmin || user._id === c.user._id)) && (
             <button
