@@ -4,12 +4,16 @@ import Landing from './pages/Landing'
 import Register from './pages/Register'
 import Login from './pages/login'
 import OTP from './pages/OTP'
+import Navbar from './components/Navbar'
 
 
 const App = () => (
   <AuthProvider>
     <Router>
+      <Navbar/>
+
       <Routes>
+
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
