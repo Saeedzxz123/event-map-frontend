@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthProvider'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
+import EditEvent from './pages/EditEvent'
+
 
 import Landing from './pages/Landing'
 import Login from './pages/login'
@@ -24,6 +26,9 @@ const App = () => (
         <Route path="/events/new" element={
         <ProtectedRoute> <AddEvent /></ProtectedRoute>} />
         <Route path="/events/:id" element={<EventShow />} />
+        <Route path="/events/:id/edit"element={<ProtectedRoute>
+      <EditEvent /> </ProtectedRoute>}/>
+
       </Routes>
     </Router>
   </AuthProvider>

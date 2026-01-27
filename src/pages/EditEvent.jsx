@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { API_URL } from '../api/config'
-import { useNavigate } from 'react-router'
+import { AuthContext } from '../context/AuthContext'
 
-const AddEvent = () => {
+const EditEvent = () => {
+  const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useContext(AuthContext)
   const token = localStorage.getItem('token')
 
   const [formData, setFormData] = useState({
@@ -17,6 +20,31 @@ const AddEvent = () => {
 
   const [picture, setPicture] = useState(null)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      const res = await axios.get(`${API_URL}/events/${id}`)
+      const event = res.data
+
+      if (!user || (!user.isAdmin && user._id !== event.userId._id)) {
+        navigate('/events')
+        return
+      }
+
+      setFormData({
+        eventName: event.eventName,
+        eventInformation: event.eventInformation,
+        country: event.country,
+        isPaid: event.isPaid,
+        registrationLink: event.registrationLink || ''
+      })
+
+      setLoading(false)
+    }
+
+    fetchEvent()
+  }, [id, user, navigate])
 
   const handleChange = e => {
     const { name, value, type, checked } = e.target
@@ -36,48 +64,54 @@ const AddEvent = () => {
       )
       if (picture) data.append('picture', picture)
 
-      await axios.post(`${API_URL}/events`, data, {
+      await axios.put(`${API_URL}/events/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      navigate('/events')
+      navigate(`/events/${id}`)
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create event')
+      setError(err.response?.data?.message || 'Failed to update event')
     }
   }
 
+  if (loading) return <p>Loading...</p>
+
   return (
     <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
-      <h2>Add New Event</h2>
+      <h2>Edit Event</h2>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
+    <label> Event name:
       <input
         type="text"
         name="eventName"
-        placeholder="Event name"
         value={formData.eventName}
         onChange={handleChange}
         required
       />
+    </label>
 
+    <lable>
+        Event information:
       <textarea
         name="eventInformation"
-        placeholder="Event information"
         value={formData.eventInformation}
         onChange={handleChange}
         required
-      />
+      />  
+      </lable>
 
+    <label>
+    country:
       <select
         name="country"
         value={formData.country}
         onChange={handleChange}
         required
       >
-               <option value="">countrys</option>
+        <option value="">Countries</option>
         <option value="Bahrain">Bahrain</option>
         <option value="Saudi Arabia">Saudi Arabia</option>
         <option value="Kuwait">Kuwait</option>
@@ -85,34 +119,40 @@ const AddEvent = () => {
         <option value="Qatar">Qatar</option>
         <option value="UAE">UAE</option>
       </select>
+    </label>
 
       <label>
+    Paid Event:
+
         <input
           type="checkbox"
           name="isPaid"
           checked={formData.isPaid}
           onChange={handleChange}
         />
-        Paid Event
       </label>
 
+    <lable>
+        registration Link:
       <input
         type="url"
         name="registrationLink"
-        placeholder="Registration link (optional)"
         value={formData.registrationLink}
         onChange={handleChange}
       />
+    </lable>
 
+    <lable>
+        photo:
       <input
         type="file"
         accept="image/*"
         onChange={e => setPicture(e.target.files[0])}
       />
-
-      <button type="submit">Create Event</button>
+    </lable>   
+      <button type="submit">Update Event</button>
     </form>
   )
 }
 
-export default AddEvent
+export default EditEvent
