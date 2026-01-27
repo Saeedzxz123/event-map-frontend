@@ -71,17 +71,19 @@ const AddEvent = () => {
         required
       />
 
-      {/* ✅ COUNTRY */}
       <select
         name="country"
         value={formData.country}
         onChange={handleChange}
         required
       >
-        <option value="">Select country</option>
+               <option value="">All Countries</option>
         <option value="Bahrain">Bahrain</option>
-        <option value="USA">USA</option>
-        <option value="UK">UK</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="Kuwait">Kuwait</option>
+        <option value="Oman">Oman</option>
+        <option value="Qatar">Qatar</option>
+        <option value="UAE">UAE</option>
       </select>
 
       <label>

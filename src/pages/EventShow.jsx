@@ -1,169 +1,114 @@
 import { useState, useEffect, useContext } from 'react'
-import { useParams, useNavigate } from 'react-router'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { API_URL } from '../api/config'
 import { AuthContext } from '../context/AuthContext'
+import { useLikes } from '../hooks/useLikes'
+import { useComments } from '../hooks/useComments'
 
 const EventShow = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useContext(AuthContext)
-
-  const [event, setEvent] = useState(null)
-  const [comments, setComments] = useState([])
-  const [newComment, setNewComment] = useState('')
-  const [likes, setLikes] = useState(0)
-  const [liked, setLiked] = useState(false)
-
   const token = localStorage.getItem('token')
 
-  const fetchData = async () => {
-    try {
-      const [eRes, cRes, lRes] = await Promise.all([
-        axios.get(`${API_URL}/events/${id}`),
-        axios.get(`${API_URL}/comments/${id}`),
-        axios.get(`${API_URL}/likes/${id}`)
-      ])
-      setEvent(eRes.data)
-      setComments(cRes.data)
-      setLikes(lRes.data.count)
+  const [event, setEvent] = useState(null)
+  const [newComment, setNewComment] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [editText, setEditText] = useState('')
 
-      if (user) {
-        setLiked(cRes.data.some(c => c.user._id === user._id)) // optional for initial like state
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  const { likes, liked, toggleLike } = useLikes(id, token)
+  const { comments, addComment, updateComment, deleteComment } =
+    useComments(id, token)
 
-useEffect(() => {
-  const loadData = async () => {
-    await fetchData()
-  }
-
-  loadData()
-}, )
-
-
-  const handleLike = async () => {
-    if (!token) return alert('Login first')
-    try {
-      const res = await axios.post(
-        `${API_URL}/likes`,
-        {},
-        { headers: { Authorization: token } }
-      )
-      setLiked(res.data.liked)
-
-      const lRes = await axios.get(`${API_URL}/likes/${id}`)
-      setLikes(lRes.data.count)
-    } catch (err) {
-      console.error(err)
-      alert('Failed to like/unlike')
-    }
-  }
-
-  const handleComment = async () => {
-    if (!token || !newComment) return
-    try {
-     await axios.post(
-  `${API_URL}/likes/${id}`,
-  {},
-  { headers: { Authorization: `Bearer ${token}` } }
-)
-
-      )
-      setNewComment('')
-      fetchData()
-    } catch (err) {
-      console.error(err)
-      alert('Failed to post comment')
-    }
-  }
-
-  const deleteComment = async (commentId) => {
-    if (!token) return
-    try {
-      await axios.delete(`${API_URL}/comments/${commentId}`, {
-        headers: { Authorization: token }
-      })
-      fetchData()
-    } catch (err) {
-      console.error(err)
-      alert('Failed to delete comment')
-    }
-  }
-
-  const deleteEvent = async () => {
-    if (!token) return
-    try {
-      await axios.delete(`${API_URL}/events/${id}`, {
-        headers: { Authorization: token }
-      })
-      navigate('/events') 
-    } catch (err) {
-      console.error(err)
-      alert('Failed to delete event')
-    }
-  }
+  useEffect(() => {
+    axios.get(`${API_URL}/events/${id}`).then(res => setEvent(res.data))
+  }, [id])
 
   if (!event) return <p>Loading...</p>
 
-  const isOwnerOrAdmin = user && (user.isAdmin || user._id === event.userId._id)
+  const isOwnerOrAdmin =
+    user && (user.isAdmin || user._id === event.userId._id)
 
   return (
     <div style={{ padding: '2rem' }}>
       <h2>{event.eventName}</h2>
       <p>{event.eventInformation}</p>
+
       {event.picture && (
-        <img
-        src={event.picture}
-        alt={event.eventName}
-        style={{ maxWidth: '300px', margin: '1rem 0' }}
-        />
+        <img src={event.picture} alt="" style={{ maxWidth: 300 }} />
       )}
 
-      <p>Likes: {likes}</p>
-      <button onClick={handleLike}>
-        {liked ? 'Unlike' : 'Like'}
-      </button>
+      <div style={{ margin: '1rem 0' }}>
+        <button
+          onClick={toggleLike}
+          style={{
+            fontSize: '1.5rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: liked ? 'red' : '#999'
+          }}
+        >
+          ❤️ {likes}
+        </button>
+        {liked && <span style={{ marginLeft: 8 }}>You liked this</span>}
+      </div>
 
       {isOwnerOrAdmin && (
         <button
-        onClick={deleteEvent}
-        style={{ marginLeft: '1rem', background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}
+          onClick={async () => {
+            await axios.delete(`${API_URL}/events/${id}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            })
+            navigate('/events')
+          }}
         >
           Delete Event
         </button>
       )}
 
-      <h3 style={{ marginTop: '2rem' }}>Comments</h3>
+      <h3>Comments</h3>
+
       {comments.map(c => (
-        <div
-        key={c._id}
-        style={{
-            borderBottom: '1px solid #ccc',
-            marginBottom: '0.5rem',
-            paddingBottom: '0.5rem'
-        }}
-        >
-        <p>
-            <strong>{c.userid.username}:</strong> {c.text}
-        </p>
-        {(user && (user.isAdmin || user._id === c.user._id)) && (
-            <button
-            onClick={() => deleteComment(c._id)}
-            style={{
-                background: '#ef4444',
-                color: '#fff',
-                border: 'none',
-                padding: '0.25rem 0.5rem',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              Delete
-            </button>
+        <div key={c._id} style={{ borderBottom: '1px solid #ddd' }}>
+          {editingId === c._id ? (
+            <>
+              <input
+                value={editText}
+                onChange={e => setEditText(e.target.value)}
+              />
+              <button
+                onClick={() => {
+                  updateComment(c._id, editText)
+                  setEditingId(null)
+                }}
+              >
+                Save
+              </button>
+            </>
+          ) : (
+            <>
+              <p>
+                <strong>{c.userId.username}</strong>: {c.content}
+              </p>
+              {(user &&
+                (user.isAdmin || user._id === c.userId._id)) && (
+                <>
+                  <button
+                    onClick={() => {
+                      setEditingId(c._id)
+                      setEditText(c.content)
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button onClick={() => deleteComment(c._id)}>
+                    Delete
+                  </button>
+                </>
+              )}
+            </>
           )}
         </div>
       ))}
@@ -171,24 +116,17 @@ useEffect(() => {
       {token && (
         <div style={{ marginTop: '1rem' }}>
           <input
-        type="text"
-        value={newComment}
-        onChange={e => setNewComment(e.target.value)}
-        placeholder="Write a comment..."
-        style={{ padding: '0.5rem', width: '60%', marginRight: '0.5rem' }}
-        />
-        <button
-        onClick={handleComment}
-        style={{
-        background: '#3b82f6',
-        color: '#fff',
-        border: 'none',
-        padding: '0.5rem 1rem',
-        borderRadius: '6px',
-        cursor: 'pointer'
-    }}
+            value={newComment}
+            onChange={e => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+          />
+          <button
+            onClick={() => {
+              addComment(newComment)
+              setNewComment('')
+            }}
           >
-            Post Comment
+            Post
           </button>
         </div>
       )}
