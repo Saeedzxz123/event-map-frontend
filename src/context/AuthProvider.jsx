@@ -5,23 +5,40 @@ import { AuthContext } from './AuthContext'
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (token) {
-      axios
-        .get(`${API_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(res => setUser(res.data))
-        .catch(() => localStorage.removeItem('token'))
+
+    if (!token) {
+      setLoading(false)
+      return
     }
+
+    axios
+      .get(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        setUser(res.data)
+      })
+      .catch(() => {
+        localStorage.removeItem('token')
+        setUser(null)
+      })
+      .finally(() => setLoading(false))
   }, [])
 
-  const login = async (email, password) => {
-    const res = await axios.post(`${API_URL}/auth/login`, { email, password })
+  const login = async (identifier, password) => {
+    const res = await axios.post(`${API_URL}/auth/login`, {
+      identifier,
+      password
+    })
+
     localStorage.setItem('token', res.data.token)
-    setUser(res.data)
+
+    const { token, ...userData } = res.data
+    setUser(userData)
   }
 
   const logout = () => {
@@ -30,7 +47,15 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        loading,
+        isAuthenticated: !!user
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
