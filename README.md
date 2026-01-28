@@ -68,6 +68,8 @@ useLikes
 
 useComments
 
+react-bootstra
+
 
 🔐 Authentication Flow
 
@@ -107,7 +109,6 @@ Likes
 
 Comments
 
-User profiles
 
 
 ➡️ Backend repo: [Backend](https://github.com/Saeedzxz123/Event-map-Backend)
