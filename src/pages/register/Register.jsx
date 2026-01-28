@@ -9,12 +9,20 @@ const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [profilePhoto, setProfilePhoto] = useState(null)
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
   const handleSubmit = async e => {
     e.preventDefault()
+
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
     try {
       const formData = new FormData()
       formData.append('username', username)
@@ -67,6 +75,18 @@ const Register = () => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Create a password"
+                required
+              />
+            </Form.Group>
+
+
+            <Form.Group className="mb-3">
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
                 required
               />
             </Form.Group>
