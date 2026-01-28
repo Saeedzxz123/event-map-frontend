@@ -5,9 +5,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import EditEvent from './pages/EditEvent'
 
 
-import Landing from './pages/Landing'
+import Landing from './pages/Landing/Landing'
 import Login from './pages/login'
-import Register from './pages/Register'
+import Register from './pages/register/Register'
 import OTP from './pages/OTP'
 import Events from './pages/Events'
 import EventShow from './pages/EventShow'

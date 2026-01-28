@@ -1,0 +1,47 @@
+.landing-page {
+  min-height: 100vh;
+  background-image: url('/images/landing-hero.jpg'); /* replace with your image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.landing-overlay {
+  min-height: 100vh;
+  background: linear-gradient(
+    rgba(11, 15, 20, 0.85),
+    rgba(11, 15, 20, 0.85)
+  );
+  display: flex;
+  align-items: center;
+}
+
+.landing-content {
+  max-width: 700px;
+}
+
+.landing-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.landing-subtitle {
+  font-size: 1.2rem;
+  color: #9ca3af;
+  margin-bottom: 2rem;
+}
+
+.landing-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.landing-btn-primary {
+  padding: 0.75rem 1.75rem;
+  font-weight: 500;
+}
+
+.landing-btn-secondary {
+  padding: 0.75rem 1.75rem;
+}
