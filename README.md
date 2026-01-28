@@ -1,16 +1,131 @@
-# React + Vite
+![applecation photo](src/assets/image.png)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🎯 EventMap — Frontend
 
-Currently, two official plugins are available:
+EventMap is a modern event discovery platform where users can explore events, view details, like and comment, and create accounts to publish their own events.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This repository contains the frontend built with React and React Bootstrap, consuming a REST API backend.
 
-## React Compiler
+🚀 Features
+👤 Guest Users
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+View all events
 
-## Expanding the ESLint configuration
+View event details
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+See likes and comments
+
+View event publisher username
+
+Register a new account
+
+Login to an existing account
+
+🔐 Authenticated Users
+
+Create events
+
+Upload event images (with default placeholder)
+
+Like & unlike events
+
+Add, edit, and delete comments
+
+Edit or delete own events
+
+View publisher profiles (ready for extension)
+
+🛡 Admin Users
+
+Edit or delete any event
+
+Edit or delete any comment
+
+🖼 Image Handling
+
+Events can include an image
+
+If no image is provided, a default placeholder PNG is shown automatically
+
+Fallback image is used if an image URL fails to load
+
+
+🧑‍💻 Tech Stack
+
+React
+
+React Router
+
+React Bootstrap
+
+Axios
+
+Context API
+
+Custom Hooks
+
+useLikes
+
+useComments
+
+
+🔐 Authentication Flow
+
+User registers with email, username, and password
+
+OTP verification is required
+
+JWT token is stored in localStorage
+
+Protected routes require authentication
+
+❤️ Likes & 💬 Comments
+
+Likes are toggled per user
+
+Comment system supports:
+
+Add
+
+Edit (owner/admin)
+
+Delete (owner/admin)
+
+Comments display the comment author username
+
+
+
+🔗 Backend
+
+This frontend expects a REST API backend with:
+
+Authentication
+
+Events
+
+Likes
+
+Comments
+
+User profiles
+
+
+➡️ Backend repo: (add link here)
+
+
+🧪 Future Improvements
+
+Public user profile page
+
+Event filtering by country
+
+Pagination for events
+
+Image optimization
+
+
+
+
+👨‍💻 Author
+
+Saeed Sadeq
