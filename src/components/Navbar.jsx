@@ -19,12 +19,14 @@ const Navbar = () => {
     borderRadius: '4px',
     cursor: 'pointer',
     fontWeight: '500',
+    margin: '0 0.15rem'
   }
 
   return (
+    <div style={{paddingBottom:'2.5rem'}}>
     <nav
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
@@ -34,13 +36,12 @@ const Navbar = () => {
         padding: '0.75rem 1rem',
         background: '#1e3a8a',
         boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
-        zIndex: 1000
-      }}
+        zIndex: 1000,
+            }}
     >
       <div>
         {user && (
           <button
-            onClick={goToProfile}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -102,6 +103,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
+    </div>
   )
 }
 

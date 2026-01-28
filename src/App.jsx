@@ -2,22 +2,23 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthProvider'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
-import EditEvent from './pages/EditEvent'
+import EditEvent from './pages/AddEvent/EditEvent'
 
 
 import Landing from './pages/Landing/Landing'
-import Login from './pages/login'
+import Login from './pages/Login/Login'
 import Register from './pages/register/Register'
-import OTP from './pages/OTP'
-import Events from './pages/Events'
-import EventShow from './pages/EventShow'
-import AddEvent from './pages/AddEvent'
+import OTP from './pages/OTP/OTP'
+import Events from './pages/Events/Events'
+import EventShow from './pages/EventShow/EventShow'
+import AddEvent from './pages/AddEvent/AddEvent'
+import Footerbar from './components/Footerbar'
 
 const App = () => (
   <AuthProvider>
     <Router>
-      <Navbar />
-      <Routes>
+              <Navbar />
+      <Routes >
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -31,7 +32,9 @@ const App = () => (
 
       </Routes>
     </Router>
+
   </AuthProvider>
+  
 )
 
 export default App
