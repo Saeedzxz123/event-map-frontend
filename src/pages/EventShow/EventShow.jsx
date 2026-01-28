@@ -79,6 +79,8 @@ const EventShow = () => {
                 </a>
               )}
 
+              <div>Publisher: {event.userId?.username}</div>
+
 
               <div className="event-like">
               <button

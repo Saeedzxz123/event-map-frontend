@@ -74,6 +74,8 @@ const Events = () => {
                 <h5 className="event-title">Event name: {event.eventName}</h5>
                 <p className="event-country">Country: {event.country}
                 </p>
+                
+                <div>Publisher: {event.userId?.username}</div>
 
                 <Link to={`/events/${event._id}`}>
                   <Button className="event-btn">
